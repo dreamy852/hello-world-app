@@ -5,49 +5,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello World App</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: background 0.5s ease;
         }
+
         .container {
             text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         h1 {
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5em;
+            margin-bottom: 40px;
+            font-size: 2.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
         }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         button {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 16px 32px;
             font-size: 16px;
-            border-radius: 5px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
         }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
         button:hover {
-            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
+
         button:active {
-            transform: scale(0.98);
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 30px;
+            }
+
+            button {
+                padding: 14px 28px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+
+            button {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+
+            .button-group {
+                gap: 12px;
+            }
+        }
+
+        /* Color scheme classes */
+        .color-scheme-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .color-scheme-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .color-scheme-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .color-scheme-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .color-scheme-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .color-scheme-6 {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
         }
     </style>
 </head>
-<body>
+<body id="body">
     <div class="container">
         <h1 id="helloText">Hello World</h1>
-        <button onclick="changeText()">Change Text</button>
+        <div class="button-group">
+            <button onclick="changeText()">
+                <span>Change Text</span>
+            </button>
+            <button onclick="changeColors()">
+                <span>Change Colors</span>
+            </button>
+        </div>
     </div>
 
     <script>
@@ -62,11 +205,35 @@
             "Hello Again!"
         ];
         
+        const colorSchemes = [
+            'color-scheme-1',
+            'color-scheme-2',
+            'color-scheme-3',
+            'color-scheme-4',
+            'color-scheme-5',
+            'color-scheme-6'
+        ];
+        
         let currentIndex = 0;
+        let currentColorIndex = 0;
 
         function changeText() {
             currentIndex = (currentIndex + 1) % messages.length;
-            document.getElementById('helloText').textContent = messages[currentIndex];
+            const helloText = document.getElementById('helloText');
+            helloText.style.animation = 'none';
+            setTimeout(() => {
+                helloText.textContent = messages[currentIndex];
+                helloText.style.animation = 'fadeIn 0.6s ease-out';
+            }, 10);
+        }
+
+        function changeColors() {
+            const body = document.getElementById('body');
+            // Remove all color scheme classes
+            colorSchemes.forEach(scheme => body.classList.remove(scheme));
+            // Add new color scheme
+            currentColorIndex = (currentColorIndex + 1) % colorSchemes.length;
+            body.classList.add(colorSchemes[currentColorIndex]);
         }
     </script>
 </body>
